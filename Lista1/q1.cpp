@@ -28,38 +28,42 @@ void quicksort(int arr[], int inicio, int fim){
     if (inicio < fim){
         int pivo = particcion(arr, inicio, fim);
 
-        quicksort(arr, inicio, pivo - 1);
+        quicksort(arr, inicio, pivo);
         quicksort(arr, pivo + 1, fim);
     }
 }
 
-void somas(int arr[], long long sum[], int size) {
+void sum(int arr[], long long sum[], int size) {
     for (int i=1; i<=size; i++) {
         sum[i] = sum[i-1] + arr[i-1];
     }
 }
 
 int main(){
-    int n, q, i, x, y;
+    int n, q, i, soma;
 
-    long long arraySum[n];
+    std::cin >> n >> q;
 
-    scanf("%d %d", &n, &q);
-
-    int* arr = new int[n];
+    int arr[n];
 
     for (i = 0; i < n; i++){
-        scanf("%d", &arr[i]);
+        std::cin >> arr[i];
     }
+
+    long long arr_sum[n];
 
     quicksort(arr, 0, n-1);
+
+    sum(arr, arr_sum, n);
     
-    for (i = 0; i <= q; i++){
-        scanf("%d %d", &x, &y);
+    for (i = q; i > 0; i--){
+        int x, y;
+        std::cin >> x >> y;
 
-        long long sum = arraySum[n - x + y] - arraySum[n - x];
+        long long sum;
+        sum = arr_sum[n - x + y] - arr_sum[n - x];
 
-        printf("%d\n", sum);
+        std::cout << sum << std::endl;
     }
-    std::cout << std::endl;
+
 }
