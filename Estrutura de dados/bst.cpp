@@ -8,7 +8,7 @@ class Node{
 
         Node(int key){
             this->key = key;
-            right, left = nullptr;
+            right = left = nullptr;
         }
 };
 
@@ -112,31 +112,26 @@ class BST{
             return root;
         }
 
-        void preordem(Node* help){
-            if(help == nullptr){
+        void inorder(Node* help){
+            if (help == nullptr){
                 return;
             }
-            std::cout << help->key << " ";
-            preordem(help->left);
-            preordem(help->right);
+            inorder(help->left);
+            std::cout << " " << help->key;
+            inorder(help->right);
         }
 
 };
 
 int main(){
-    int operador, key, element;
+    int i, n, key;
+
+    std::cin >> n;
 
     BST dict;
-    while (operador != -1){
-        std::cin >> operador;
-        if (operador == 1){
-            std::cin >> key;
-            dict.insert(key);
-        } else if (operador == 2){
-            std::cin >> key;
-            dict.remove(key);
-        } else if (operador == 3){
-            dict.preordem(dict.getRoot());
-        }
+
+    for (i=0; i < n; i++){
+        std::cin >> key;
+        dict.insert(key);
     }
 }

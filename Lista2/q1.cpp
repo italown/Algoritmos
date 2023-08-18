@@ -5,41 +5,31 @@ class Link{
     private:
         char element;
         Link* next;
-        Link* prev;
     
     public:
-        Link(char value, Link* new_prev, Link* next_node){
+        Link(char value, Link* nextNode){
             element = value;
-            prev = new_prev;
-            next = next_node;
+            next = nextNode;
         }
 
-        Link(Link* new_prev, Link* next_node){
-            next = next_node;
-            prev = new_prev;
+        Link(Link* nextNode){
+            next = nextNode;
         }
 
         Link* getNext(){
             return next;
         }
 
-        Link* setPrev(Link* new_prev){
-            return prev = new_prev;
-        }
-        Link* getPrev(){
-            return prev;
-        }
-
-        Link* setNext(Link* new_next){
-            return next = new_next;
+        Link* setNext(Link* newNext){
+            return next = newNext;
         }
 
         char getElement(){
             return element;
         }
 
-        char setElement(char value){
-            return element = value;
+        char setElement(int newElement){
+            return element = newElement;
         }
 };
 
@@ -50,20 +40,24 @@ class LinkedList{
         Link* curr;
         int size;
 
-    public:
-        LinkedList(){
-            head = tail = curr = new Link(nullptr, nullptr);
+        void init(){
+            curr = tail = head = new Link(nullptr);
             size = 0;
         }
 
-        void insert(char value){
-            curr->setPrev(new Link(value, curr->getPrev(), curr));
+        void deleteAll(){
+            curr = head;
 
-            if (head == curr){
-                head = curr->getPrev()->getPrev();
+            while (curr != nullptr){
+                head = curr;
+                curr = curr->getNext();
+                delete head;
             }
+        }
 
-            size++;
+    public:
+        LinkedList(){
+            init();
         }
 
         void moveToStart(){
@@ -72,6 +66,18 @@ class LinkedList{
 
         void moveToEnd(){
             curr = tail;
+        }
+
+        void insert(int value){
+            curr->setNext(new Link(value, curr->getNext()));
+
+            if (tail == curr){
+                tail = curr->getNext();
+            }
+            curr = curr->getNext();
+
+
+            size++;
         }
 
         void print(){
@@ -84,30 +90,25 @@ class LinkedList{
 
             std::cout << std::endl;
         }
-
 };
 
 int main(){
     std::string input;
-    int i;
+    int i, j;
 
-    while (!std::cin.eof()){
-        std::cin >> input;
+
+    while (std::cin >> input){
         LinkedList list;
-
-        if (!std::cin.eof()){
-            for (i=0; i < input.size(); i++){
-                if (input[i] == '['){
-                    list.moveToStart();
-                }
-                else if (input[i] == ']'){
-                    list.moveToEnd();
-                } else{
-                    list.insert(input[i]);
-                }
+        for (i=0; i < input.size(); i++){
+            if (input[i] == '['){
+                list.moveToStart();
             }
-            list.print();
+            else if (input[i] == ']'){
+                list.moveToEnd();
+            } else{
+                list.insert(input[i]);
+            }
         }
+        list.print();
     }
-
 }
