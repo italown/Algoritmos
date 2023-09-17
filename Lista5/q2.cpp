@@ -1,84 +1,56 @@
 #include <iostream>
 #include <queue>
-#include <stack>
 #include <vector>
-#include <string>
 
 class Graph{
-    private: 
-        int** matrix;
-        int numEdge;
+    private:
+        std::vector<std::vector<int>> list;
         int size;
-        bool* mark;
-
+        std::vector<int> grau;
+    
     public:
         Graph(int size){
-            mark = new bool[size];
-            numEdge = 0;
             this->size = size;
-            
-            matrix = new int* [size];
+            list.resize(size + 1);
+            grau.resize(size + 1, 0);
+        }
 
-            for (int i = 0; i < size; i++){
-                matrix[i] = new int[size];
-                for (int j = 0; j < size; j++){
-                    matrix[i][j] = 0;
+        void add(int i, int j){
+            list[i].push_back(j);
+            grau[j]++;
+        }
+
+        void toposort(){
+            std::vector<int> ordem;
+            std::priority_queue<int, std::vector<int>, std::greater<int>> q;;
+
+            for (int i =1; i <= size; i++){
+                if (grau[i] == 0){
+                    q.push(i);
                 }
             }
-        }
+            while (!q.empty()){
+                int c = q.top();
+                q.pop();
 
-        void clear(){
-            delete[] mark;
-            
-            for (int i = 0; i < size; i++) {
-                delete[] matrix[i];
-            }
-            delete[] matrix;
-        }
+                ordem.push_back(c);
 
-        int first(int v){
-            for (int j = 0; j < size; j++){
-                if (matrix[v][j] != 0){
-                    return j;
+                for (int i = 0; i < list[c].size(); i++){
+                    grau[list[c][i]]--;
+                    if (grau[list[c][i]] == 0){
+                        q.push(list[c][i]);
+                    }
                 }
             }
-            return size;
-        }
-
-        int next(int v, int w){
-            for(int j = w+1; j < size; j++){
-                if (matrix[v][j] != 0){
-                    return j;
+            if (ordem.size() == size){
+                for (int i = 0; i < size; i++){
+                    std::cout << ordem[i] << " ";
                 }
+            } else{
+                std::cout << "Sandro fails.";
             }
-            return size;
+            std::cout << std::endl;
         }
-
-        void setEdge(int i, int j){
-            matrix[i][j] = 1;
-        }
-
-        void toposort(int v){
-            std::stack<int> stack;
-            help_toposort(v, stack);
-        }
-
-        void help_toposort(int v, std::stack<int> s){
-            for (int i=0; i < size; i++){
-                mark[i] = false;
-            }
-            mark[v] = true;
-            int w = first(v);
-
-            while(w < size){
-                if (!mark[w]){
-                    help_toposort(w, s);
-                }
-                w = next(v, w);
-            }
-            std::cout << v << " ";
-        }
-
 };
 
 
@@ -94,10 +66,9 @@ int main(){
 
         std::cin >> x >> y;
 
-        grafo.setEdge(x, y);
+        grafo.add(x, y);
     }
 
-    grafo.toposort(1);
-
+    grafo.toposort();
 }
 
